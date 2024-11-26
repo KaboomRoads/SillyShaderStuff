@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "part=0": {
+      "model": "tehshadur:block/omen_monolith_0"
+    },
+    "part=1": {
+      "model": "tehshadur:block/omen_monolith_1"
+    },
+    "part=2": {
+      "model": "tehshadur:block/omen_monolith_2"
+    },
+    "part=3": {
+      "model": "tehshadur:block/omen_monolith_3"
+    }
+  }
+}

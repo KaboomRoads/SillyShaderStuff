@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "part=0": {
+      "model": "tehshadur:block/divine_dominance_0"
+    },
+    "part=1": {
+      "model": "tehshadur:block/divine_dominance_1"
+    },
+    "part=2": {
+      "model": "tehshadur:block/divine_dominance_2"
+    }
+  }
+}

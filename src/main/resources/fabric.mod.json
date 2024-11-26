@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "${modid}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/tehshadur/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.kaboomroads.tehshadur.data.TehShadurDataGenerator"
+    ],
+    "client": [
+      "com.kaboomroads.tehshadur.client.TehShadurClient"
+    ],
+    "main": [
+      "com.kaboomroads.tehshadur.TehShadur"
+    ]
+  },
+  "accessWidener": "${modid}.accesswidener",
+  "mixins": [
+    "${modid}.mixins.json",
+    {
+      "config": "${modid}.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
