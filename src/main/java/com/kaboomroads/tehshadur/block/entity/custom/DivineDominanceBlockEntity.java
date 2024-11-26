@@ -12,6 +12,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,10 +26,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.UUID;
 
 public class DivineDominanceBlockEntity extends BlockEntity {
     public ScaleChangingBorderProvider borderProvider = new ScaleChangingBorderProvider(
@@ -37,6 +43,7 @@ public class DivineDominanceBlockEntity extends BlockEntity {
             10,
             50
     );
+    public HashSet<UUID> entityUUIDs = new HashSet<>();
 
     public DivineDominanceBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.DIVINE_DOMINANCE, pos, blockState);
@@ -49,12 +56,22 @@ public class DivineDominanceBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        ListTag listTag = new ListTag();
+        for (UUID uuid : entityUUIDs) listTag.add(NbtUtils.createUUID(uuid));
+        tag.put("entity_uuids", listTag);
+        saveBorderProvider(tag, registries);
+    }
+
+    public void saveBorderProvider(CompoundTag tag, HolderLookup.Provider registries) {
         tag.put("border_provider", ((BorderProviderType<ScaleChangingBorderProvider>) borderProvider.getBorderProviderType()).save(borderProvider, registries));
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        entityUUIDs.clear();
+        ListTag listTag = tag.getList("entity_uuids", Tag.TAG_INT_ARRAY);
+        for (Tag uuid : listTag) entityUUIDs.add(NbtUtils.loadUUID(uuid));
         borderProvider = BorderProviderType.load(tag.getCompound("border_provider"), registries);
     }
 
@@ -66,12 +83,26 @@ public class DivineDominanceBlockEntity extends BlockEntity {
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveWithoutMetadata(registries);
+        CompoundTag tag = new CompoundTag();
+        saveBorderProvider(tag, registries);
+        return tag;
     }
 
     public static void serverTick(ServerLevel level, BlockPos blockPos, BlockState blockState, DivineDominanceBlockEntity blockEntity) {
         long time = level.getGameTime();
         blockEntity.tickBorder(blockPos, blockState, time);
+        for (Entity entity : level.getEntities((Entity) null, blockEntity.borderProvider.bounds, e -> blockEntity.borderProvider.bounds.contains(e.position()))) {
+            if (blockEntity.entityUUIDs.add(entity.getUUID())) blockEntity.setChanged();
+        }
+        for (Iterator<UUID> iterator = blockEntity.entityUUIDs.iterator(); iterator.hasNext(); ) {
+            UUID uuid = iterator.next();
+            Entity entity = level.getEntity(uuid);
+            if (entity != null) ((EntityDuck) entity).tehshadur$setBorderProvider(blockEntity.borderProvider);
+            else {
+                iterator.remove();
+                blockEntity.setChanged();
+            }
+        }
         if (blockEntity.borderProvider.bounds != null && time >= blockEntity.borderProvider.timeOfCollapse)
             blockEntity.divineCollapse(level, blockPos);
     }
@@ -92,8 +123,10 @@ public class DivineDominanceBlockEntity extends BlockEntity {
     }
 
     public void divineCollapse(ServerLevel level, BlockPos blockPos) {
-        for (Entity entity : level.getEntities(EntityTypeTest.forClass(Entity.class), e -> equals(((EntityDuck) e).tehshadur$getBorderProvider())))
-            entity.kill(level);
+        for (UUID uuid : entityUUIDs) {
+            Entity entity = level.getEntity(uuid);
+            if (entity != null) entity.kill(level);
+        }
         level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         Vec3 pos = borderProvider.bounds.getCenter();
         for (ServerPlayer player : level.getPlayers(player -> player.distanceToSqr(pos) <= 256 * 256)) {

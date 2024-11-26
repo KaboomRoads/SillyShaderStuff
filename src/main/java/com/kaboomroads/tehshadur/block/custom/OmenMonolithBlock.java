@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public class OmenMonolithBlock extends BaseEntityBlock {
     public static final MapCodec<OmenMonolithBlock> CODEC = simpleCodec(OmenMonolithBlock::new);
     public static final IntegerProperty PART = IntegerProperty.create("part", 0, 3);
@@ -100,13 +102,16 @@ public class OmenMonolithBlock extends BaseEntityBlock {
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (level.getBlockEntity(pos) instanceof OmenMonolithBlockEntity blockEntity) {
-            for (Entity entity : blockEntity.entities) {
-                EntityDuck duck = ((EntityDuck) entity);
-                if (blockEntity.borderProvider.equals(duck.tehshadur$getBorderProvider())) {
-                    duck.tehshadur$setBorderProvider(new SimpleBorderProvider(null));
+        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof OmenMonolithBlockEntity blockEntity) {
+            for (UUID uuid : blockEntity.entityUUIDs) {
+                Entity entity = serverLevel.getEntity(uuid);
+                if (entity != null) {
+                    EntityDuck duck = ((EntityDuck) entity);
+                    if (blockEntity.borderProvider.equals(duck.tehshadur$getBorderProvider()))
+                        duck.tehshadur$setBorderProvider(new SimpleBorderProvider(null));
                 }
             }
+            blockEntity.entityUUIDs.clear();
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }

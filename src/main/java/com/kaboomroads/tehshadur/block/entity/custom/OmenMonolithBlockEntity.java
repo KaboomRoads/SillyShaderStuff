@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.UUID;
 
 public class OmenMonolithBlockEntity extends BlockEntity {
@@ -42,7 +43,7 @@ public class OmenMonolithBlockEntity extends BlockEntity {
             10,
             50
     );
-    public HashSet<Entity> entities = new HashSet<>();
+    public HashSet<UUID> entityUUIDs = new HashSet<>();
 
     public OmenMonolithBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.OMEN_MONOLITH, pos, blockState);
@@ -56,27 +57,22 @@ public class OmenMonolithBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         ListTag listTag = new ListTag();
-        for (Entity entity : entities) {
-            System.out.println("SAVED ENTITY");
-            listTag.add(NbtUtils.createUUID(entity.getUUID()));
-        }
-        tag.put("entities", listTag);
-        tag.put("border_provider", ((BorderProviderType<ScaleChangingBorderProvider>) borderProvider.getBorderProviderType()).save(borderProvider, registries));
+        for (UUID uuid : entityUUIDs) listTag.add(NbtUtils.createUUID(uuid));
+        tag.put("entity_uuids", listTag);
+        saveBorderProvider(tag, registries);
     }
 
-    public HashSet<UUID> entityUUIDs = new HashSet<>();
+    public void saveBorderProvider(CompoundTag tag, HolderLookup.Provider registries) {
+        tag.put("border_provider", ((BorderProviderType<ScaleChangingBorderProvider>) borderProvider.getBorderProviderType()).save(borderProvider, registries));
+    }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        borderProvider = BorderProviderType.load(tag.getCompound("border_provider"), registries);
-        entities.clear();
         entityUUIDs.clear();
-        ListTag listTag = tag.getList("entities", Tag.TAG_INT_ARRAY);
-        for (Tag uuid : listTag) {
-            System.out.println("LOADED ENTITY");
-            entityUUIDs.add(NbtUtils.loadUUID(uuid));
-        }
+        ListTag listTag = tag.getList("entity_uuids", Tag.TAG_INT_ARRAY);
+        for (Tag uuid : listTag) entityUUIDs.add(NbtUtils.loadUUID(uuid));
+        borderProvider = BorderProviderType.load(tag.getCompound("border_provider"), registries);
     }
 
     @Override
@@ -87,20 +83,26 @@ public class OmenMonolithBlockEntity extends BlockEntity {
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveWithoutMetadata(registries);
+        CompoundTag tag = new CompoundTag();
+        saveBorderProvider(tag, registries);
+        return tag;
     }
 
     public static void serverTick(ServerLevel level, BlockPos blockPos, BlockState blockState, OmenMonolithBlockEntity blockEntity) {
-        for (UUID uuid : blockEntity.entityUUIDs) {
-            Entity entity = level.getEntity(uuid);
-            if (entity != null) blockEntity.entities.add(entity);
-        }
-        blockEntity.entityUUIDs.clear();
         long time = level.getGameTime();
         blockEntity.tickBorder(blockPos, blockState, time);
-        blockEntity.entities.addAll(level.getEntities((Entity) null, blockEntity.borderProvider.bounds, e -> blockEntity.borderProvider.bounds.contains(e.position())));
-        for (Entity entity : blockEntity.entities)
-            ((EntityDuck) entity).tehshadur$setBorderProvider(blockEntity.borderProvider);
+        for (Entity entity : level.getEntities((Entity) null, blockEntity.borderProvider.bounds, e -> blockEntity.borderProvider.bounds.contains(e.position()))) {
+            if (blockEntity.entityUUIDs.add(entity.getUUID())) blockEntity.setChanged();
+        }
+        for (Iterator<UUID> iterator = blockEntity.entityUUIDs.iterator(); iterator.hasNext(); ) {
+            UUID uuid = iterator.next();
+            Entity entity = level.getEntity(uuid);
+            if (entity != null) ((EntityDuck) entity).tehshadur$setBorderProvider(blockEntity.borderProvider);
+            else {
+                iterator.remove();
+                blockEntity.setChanged();
+            }
+        }
         if (blockEntity.borderProvider.bounds != null && time >= blockEntity.borderProvider.timeOfCollapse)
             blockEntity.collapse(level, blockPos);
     }
@@ -121,7 +123,10 @@ public class OmenMonolithBlockEntity extends BlockEntity {
     }
 
     public void collapse(ServerLevel level, BlockPos blockPos) {
-        for (Entity entity : entities) entity.kill(level);
+        for (UUID uuid : entityUUIDs) {
+            Entity entity = level.getEntity(uuid);
+            if (entity != null) entity.kill(level);
+        }
         level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         Vec3 pos = borderProvider.bounds.getCenter();
         for (ServerPlayer player : level.getPlayers(player -> player.distanceToSqr(pos) <= 256 * 256)) {

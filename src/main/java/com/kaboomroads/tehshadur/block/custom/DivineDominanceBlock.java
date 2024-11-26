@@ -2,11 +2,14 @@ package com.kaboomroads.tehshadur.block.custom;
 
 import com.kaboomroads.tehshadur.block.entity.ModBlockEntities;
 import com.kaboomroads.tehshadur.block.entity.custom.DivineDominanceBlockEntity;
+import com.kaboomroads.tehshadur.border.SimpleBorderProvider;
+import com.kaboomroads.tehshadur.mixinducks.EntityDuck;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -24,6 +27,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class DivineDominanceBlock extends BaseEntityBlock {
     public static final MapCodec<DivineDominanceBlock> CODEC = simpleCodec(DivineDominanceBlock::new);
@@ -68,6 +73,23 @@ public class DivineDominanceBlock extends BaseEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(PART);
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof DivineDominanceBlockEntity blockEntity) {
+            for (UUID uuid : blockEntity.entityUUIDs) {
+                Entity entity = serverLevel.getEntity(uuid);
+                if (entity != null) {
+                    EntityDuck duck = ((EntityDuck) entity);
+                    if (blockEntity.borderProvider.equals(duck.tehshadur$getBorderProvider()))
+                        duck.tehshadur$setBorderProvider(new SimpleBorderProvider(null));
+                }
+            }
+            blockEntity.entityUUIDs.clear();
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Nullable
