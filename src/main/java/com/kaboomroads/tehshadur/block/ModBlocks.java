@@ -1,20 +1,19 @@
 package com.kaboomroads.tehshadur.block;
 
 import com.kaboomroads.tehshadur.TehShadur;
-import com.kaboomroads.tehshadur.block.custom.DesolisAntennaBlock;
-import com.kaboomroads.tehshadur.block.custom.DesolisCannonBlock;
-import com.kaboomroads.tehshadur.block.custom.DivineDominanceBlock;
-import com.kaboomroads.tehshadur.block.custom.OmenMonolithBlock;
+import com.kaboomroads.tehshadur.block.custom.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.Function;
 
@@ -56,6 +55,18 @@ public class ModBlocks {
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()
                     .strength(3.0F, 6.0F)
+    );
+    public static final Block ERASURE_FIRE = register(
+            "erasure_fire",
+            ErasureFireBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .replaceable()
+                    .noCollission()
+                    .instabreak()
+                    .lightLevel(blockStatex -> 10)
+                    .sound(SoundType.WOOL)
+                    .pushReaction(PushReaction.DESTROY)
     );
 
     public static Block register(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, Block> function, BlockBehaviour.Properties properties) {

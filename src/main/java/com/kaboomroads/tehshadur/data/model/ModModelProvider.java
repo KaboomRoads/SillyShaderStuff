@@ -10,10 +10,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.data.models.blockstates.PropertyDispatch;
-import net.minecraft.data.models.blockstates.Variant;
-import net.minecraft.data.models.blockstates.VariantProperties;
+import net.minecraft.data.models.blockstates.*;
 import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureMapping;
@@ -21,6 +18,8 @@ import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+
+import java.util.List;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -33,7 +32,23 @@ public class ModModelProvider extends FabricModelProvider {
         createDivineDominance(generator, ModBlocks.OMEN_MONOLITH, OmenMonolithBlock.PART);
         createDesolisCannon(generator, ModBlocks.DESOLIS_CANNON);
         createDesolisAntenna(generator, ModBlocks.DESOLIS_ANTENNA);
+        createErasureFire(generator, ModBlocks.ERASURE_FIRE);
     }
+
+    private void createErasureFire(BlockModelGenerators generator, Block block) {
+        List<ResourceLocation> list = generator.createFloorFireModels(block);
+        List<ResourceLocation> list2 = generator.createSideFireModels(block);
+        generator.blockStateOutput
+                .accept(
+                        MultiPartGenerator.multiPart(block)
+                                .with(BlockModelGenerators.wrapModels(list, variant -> variant))
+                                .with(BlockModelGenerators.wrapModels(list2, variant -> variant))
+                                .with(BlockModelGenerators.wrapModels(list2, variant -> variant.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)))
+                                .with(BlockModelGenerators.wrapModels(list2, variant -> variant.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)))
+                                .with(BlockModelGenerators.wrapModels(list2, variant -> variant.with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)))
+                );
+    }
+
 
     public static void createDesolisAntenna(BlockModelGenerators generator, Block block) {
         generator.blockStateOutput

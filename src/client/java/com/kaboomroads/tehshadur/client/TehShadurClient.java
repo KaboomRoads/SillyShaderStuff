@@ -1,5 +1,6 @@
 package com.kaboomroads.tehshadur.client;
 
+import com.kaboomroads.tehshadur.block.ModBlocks;
 import com.kaboomroads.tehshadur.block.entity.ModBlockEntities;
 import com.kaboomroads.tehshadur.client.mixinducks.CameraDuck;
 import com.kaboomroads.tehshadur.client.mixinducks.GameRendererDuck;
@@ -17,10 +18,12 @@ import com.kaboomroads.tehshadur.entity.ModEntities;
 import com.kaboomroads.tehshadur.networking.ModPackets;
 import com.kaboomroads.tehshadur.particle.ModParticles;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class TehShadurClient implements ClientModInitializer {
@@ -36,6 +39,7 @@ public class TehShadurClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ModParticles.ERASURE_RESIDUE, ErasureResidueParticle.Provider::new);
         EntityRendererRegistry.register(ModEntities.ERASURE, ErasureRenderer::new);
         initializeNetworking();
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), ModBlocks.ERASURE_FIRE);
     }
 
     public void initializeNetworking() {

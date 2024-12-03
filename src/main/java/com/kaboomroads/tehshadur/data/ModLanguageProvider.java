@@ -23,6 +23,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         builder.add(ModBlocks.OMEN_MONOLITH, "Omen Monolith");
         builder.add(ModBlocks.DESOLIS_CANNON, "Desolis Cannon");
         builder.add(ModBlocks.DESOLIS_ANTENNA, "Desolis Antenna");
+        builder.add(ModBlocks.ERASURE_FIRE, "Erasure Fire");
         builder.add(ModItems.DESOLIS_RECIEVER, "Desolis Reciever");
         builder.add(ModItems.OBLITERATION_ROUND, "Obliteration Round");
         builder.add("item.tehshadur.desolis_reciever.connect", "Antenna paired");

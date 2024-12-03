@@ -31,8 +31,6 @@ public class BitQueue {
     public String toCompactString() {
         StringBuilder result = new StringBuilder();
         byte firstBitPos = 63;
-        while (firstBitPos >= 0 && !get(firstBitPos)) firstBitPos--;
-        if (firstBitPos < 0) return "0 -> 64";
         boolean currentBit = get(firstBitPos);
         int count = 0;
         boolean firstGroup = true;

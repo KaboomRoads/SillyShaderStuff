@@ -1,5 +1,6 @@
 package com.kaboomroads.tehshadur.data;
 
+import com.kaboomroads.tehshadur.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.core.HolderLookup;
@@ -13,5 +14,6 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
+        add(ModBlocks.ERASURE_FIRE, noDrop());
     }
 }

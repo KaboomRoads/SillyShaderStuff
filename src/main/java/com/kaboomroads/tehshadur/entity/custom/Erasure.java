@@ -1,5 +1,6 @@
 package com.kaboomroads.tehshadur.entity.custom;
 
+import com.kaboomroads.tehshadur.block.ModBlocks;
 import com.kaboomroads.tehshadur.entity.ModEntities;
 import com.kaboomroads.tehshadur.networking.payload.FlashPayload;
 import com.kaboomroads.tehshadur.networking.payload.FovPayload;
@@ -21,14 +22,12 @@ import net.minecraft.util.random.SimpleWeightedRandomList;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,14 +128,16 @@ public class Erasure extends Entity {
 
         @Override
         public void interactWithBlocks(List<BlockPos> list) {
-            List<ServerExplosion.StackCollector> list2 = new ArrayList<>();
             Util.shuffle(list, level().random);
             for (BlockPos pos : list) {
                 BlockState state = level().getBlockState(pos);
-                Optional<BlockState> randomState = RANDOM_STATES.getRandomValue(level().random);
-                if (randomState.isPresent()) {
-                    if (!state.canBeReplaced()) level().setBlock(pos, randomState.get(), 2);
-                    addOrAppendStack(list2, ItemStack.EMPTY, pos);
+                if (!state.canBeReplaced()) {
+                    Optional<BlockState> randomState = RANDOM_STATES.getRandomValue(level().random);
+                    if (randomState.isPresent()) {
+                        level().setBlock(pos, randomState.get(), 2);
+                    }
+                } else if (state.canBeReplaced() && !state.isAir()) {
+                    level().setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
                 }
             }
         }
@@ -146,7 +147,7 @@ public class Erasure extends Entity {
             Level level = level();
             for (BlockPos blockPos : list) {
                 if (level.random.nextInt(5) == 0 && level.getBlockState(blockPos).isAir() && level.getBlockState(blockPos.below()).isSolidRender())
-                    level.setBlockAndUpdate(blockPos, Blocks.SOUL_FIRE.defaultBlockState());
+                    level.setBlockAndUpdate(blockPos, ModBlocks.ERASURE_FIRE.defaultBlockState());
             }
         }
     }
