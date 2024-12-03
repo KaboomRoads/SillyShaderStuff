@@ -11,7 +11,7 @@
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
-      "com.kaboomroads.tehshadur.data.TehShadurDataGenerator"
+      "com.kaboomroads.tehshadur.client.data.TehShadurDataGenerator"
     ],
     "client": [
       "com.kaboomroads.tehshadur.client.TehShadurClient"

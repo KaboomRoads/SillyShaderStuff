@@ -1,4 +1,4 @@
-package com.kaboomroads.tehshadur.data.model;
+package com.kaboomroads.tehshadur.client.data.model;
 
 import com.kaboomroads.tehshadur.TehShadur;
 import com.kaboomroads.tehshadur.block.ModBlocks;
@@ -6,15 +6,15 @@ import com.kaboomroads.tehshadur.block.custom.DesolisAntennaBlock;
 import com.kaboomroads.tehshadur.block.custom.DivineDominanceBlock;
 import com.kaboomroads.tehshadur.block.custom.OmenMonolithBlock;
 import com.kaboomroads.tehshadur.item.ModItems;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.blockstates.*;
-import net.minecraft.data.models.model.ModelLocationUtils;
-import net.minecraft.data.models.model.ModelTemplates;
-import net.minecraft.data.models.model.TextureMapping;
-import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.blockstates.*;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -69,7 +69,7 @@ public class ModModelProvider extends FabricModelProvider {
                         MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, ModModelTemplates.DESOLIS_CANNON.create(block, new TextureMapping().put(TextureSlot.TEXTURE, TextureMapping.getBlockTexture(block)).put(TextureSlot.PARTICLE, ResourceLocation.fromNamespaceAndPath(TehShadur.MOD_ID, "block/desolis")), generator.modelOutput)))
                                 .with(BlockModelGenerators.createHorizontalFacingDispatch())
                 );
-        generator.delegateItemModel(block, ModelLocationUtils.getModelLocation(block, "_item"));
+        generator.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block, "_item"));
     }
 
     public static void createDivineDominance(BlockModelGenerators generator, Block block, IntegerProperty partProperty) {
@@ -90,5 +90,6 @@ public class ModModelProvider extends FabricModelProvider {
         generator.generateFlatItem(ModItems.DIVINE_DOMINANCE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(ModItems.OMEN_MONOLITH, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(ModItems.OBLITERATION_ROUND, ModelTemplates.FLAT_ITEM);
+        generator.declareCustomModelItem(ModItems.DESOLIS_RECIEVER);
     }
 }

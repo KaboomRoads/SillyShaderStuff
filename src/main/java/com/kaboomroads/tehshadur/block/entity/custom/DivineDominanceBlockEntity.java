@@ -133,7 +133,7 @@ public class DivineDominanceBlockEntity extends BlockEntity {
             ServerPlayNetworking.send(player, new FlashPayload(ARGB.colorFromFloat(0.85F, 1.0F, 0.92F, 0.5F), 1, 50, 10));
             ServerPlayNetworking.send(player, new FovPayload(0.75F, 5, 1, 40));
             ServerPlayNetworking.send(player, new ScreenShakePayload(2.0F, 0.1F, 5, 25, 30));
-            level.sendParticles(player, ModParticles.EXISTENCE, false, pos.x, pos.y, pos.z, 100, 0, 0, 0, 0.25);
+            level.sendParticles(player, ModParticles.EXISTENCE, false, true, pos.x, pos.y, pos.z, 100, 0, 0, 0, 0.25);
         }
     }
 }

@@ -1,8 +1,8 @@
-package com.kaboomroads.tehshadur.data.model;
+package com.kaboomroads.tehshadur.client.data.model;
 
 import com.kaboomroads.tehshadur.TehShadur;
-import net.minecraft.data.models.model.ModelTemplate;
-import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;

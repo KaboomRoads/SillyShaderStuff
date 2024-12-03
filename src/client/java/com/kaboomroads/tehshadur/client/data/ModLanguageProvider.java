@@ -1,4 +1,4 @@
-package com.kaboomroads.tehshadur.data;
+package com.kaboomroads.tehshadur.client.data;
 
 import com.kaboomroads.tehshadur.block.ModBlocks;
 import com.kaboomroads.tehshadur.item.ModItems;

@@ -1,4 +1,4 @@
-package com.kaboomroads.tehshadur.data.tags;
+package com.kaboomroads.tehshadur.client.data.tags;
 
 import com.kaboomroads.tehshadur.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

@@ -1,7 +1,7 @@
-package com.kaboomroads.tehshadur.data.model;
+package com.kaboomroads.tehshadur.client.data.model;
 
-import net.minecraft.data.models.model.TextureMapping;
-import net.minecraft.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
 
 public class ModTextureMappings {

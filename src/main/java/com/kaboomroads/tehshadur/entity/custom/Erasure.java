@@ -94,7 +94,7 @@ public class Erasure extends Entity {
                 ServerPlayNetworking.send(player, new FlashPayload(ARGB.colorFromFloat(0.5F, 0.0F, 1.0F, 1.0F), 1, 80, 20));
                 ServerPlayNetworking.send(player, new FovPayload(0.75F, 5, 1, 40));
                 ServerPlayNetworking.send(player, new ScreenShakePayload(2.0F, 0.1F, 5, 25, 60));
-                level.sendParticles(player, ModParticles.ERASURE_RESIDUE, true, pos.x, pos.y, pos.z, 500, 0, 0, 0, 0.5);
+                level.sendParticles(player, ModParticles.ERASURE_RESIDUE, false, true, pos.x, pos.y, pos.z, 500, 0, 0, 0, 0.5);
             }
         }
     }
@@ -168,30 +168,29 @@ public class Erasure extends Entity {
                             d /= g;
                             e /= g;
                             f /= g;
-                            float h = radius() * (0.7F + level().random.nextFloat() * 0.6F);
+                            ServerLevel level = level();
+                            float h = radius() * (0.7F + level.random.nextFloat() * 0.6F);
                             double m = center().x;
                             double n = center().y;
                             double o = center().z;
                             for (float p = 0.3F; h > 0.0F; h -= 0.225F) {
                                 BlockPos blockPos = BlockPos.containing(m, n, o);
-                                BlockState blockState = level().getBlockState(blockPos);
-
+                                BlockState blockState = level.getBlockState(blockPos);
                                 BlockPos.MutableBlockPos cursor = blockPos.mutable();
                                 boolean b = false;
                                 for (Direction dir : Direction.values()) {
-                                    cursor.set(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-                                    BlockState relative = level().getBlockState(cursor);
+                                    cursor.setWithOffset(blockPos, dir);
+                                    BlockState relative = level.getBlockState(cursor);
                                     if (relative.canBeReplaced()) {
                                         b = true;
                                         break;
                                     }
                                 }
-
-                                FluidState fluidState = level().getFluidState(blockPos);
-                                if (!level().isInWorldBounds(blockPos)) break;
-                                Optional<Float> optional = this.damageCalculator.getBlockExplosionResistance(this, level(), blockPos, blockState, fluidState);
+                                FluidState fluidState = blockState.getFluidState();
+                                if (!level.isInWorldBounds(blockPos)) break;
+                                Optional<Float> optional = damageCalculator.getBlockExplosionResistance(this, level, blockPos, blockState, fluidState);
                                 if (optional.isPresent()) h -= (optional.get() + p) * p;
-                                if (b && (!blockState.canBeReplaced() || !blockState.isAir()) && h > 0.0F && this.damageCalculator.shouldBlockExplode(this, this.level(), blockPos, blockState, h))
+                                if (b && (!blockState.canBeReplaced() || !blockState.isAir()) && h > 0.0F && damageCalculator.shouldBlockExplode(this, level, blockPos, blockState, h))
                                     list.add(new Hruska(blockPos, blockState));
                                 m += d * p;
                                 n += e * p;
@@ -232,7 +231,7 @@ public class Erasure extends Entity {
                 } else if (!state.isAir()) level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
             }
         }
-        
+
         public record Hruska(BlockPos pos, BlockState state) {
         }
     }

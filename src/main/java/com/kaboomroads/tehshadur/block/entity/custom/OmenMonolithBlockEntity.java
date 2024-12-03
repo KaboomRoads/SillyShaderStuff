@@ -133,7 +133,7 @@ public class OmenMonolithBlockEntity extends BlockEntity {
             ServerPlayNetworking.send(player, new FlashPayload(ARGB.colorFromFloat(0.85F, 0.0F, 1.0F, 1.0F), 1, 50, 10));
             ServerPlayNetworking.send(player, new FovPayload(0.75F, 5, 1, 40));
             ServerPlayNetworking.send(player, new ScreenShakePayload(2.0F, 0.1F, 5, 25, 30));
-            level.sendParticles(player, ModParticles.ERASURE_RESIDUE, false, pos.x, pos.y, pos.z, 100, 0, 0, 0, 0.25);
+            level.sendParticles(player, ModParticles.ERASURE_RESIDUE, false, true, pos.x, pos.y, pos.z, 100, 0, 0, 0, 0.25);
         }
     }
 }

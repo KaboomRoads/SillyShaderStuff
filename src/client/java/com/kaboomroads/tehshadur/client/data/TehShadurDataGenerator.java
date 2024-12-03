@@ -1,8 +1,8 @@
-package com.kaboomroads.tehshadur.data;
+package com.kaboomroads.tehshadur.client.data;
 
-import com.kaboomroads.tehshadur.data.model.ModModelProvider;
-import com.kaboomroads.tehshadur.data.tags.ModBlockTagProvider;
-import com.kaboomroads.tehshadur.data.tags.ModItemTagProvider;
+import com.kaboomroads.tehshadur.client.data.model.ModModelProvider;
+import com.kaboomroads.tehshadur.client.data.tags.ModBlockTagProvider;
+import com.kaboomroads.tehshadur.client.data.tags.ModItemTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
