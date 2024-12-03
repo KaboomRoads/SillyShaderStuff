@@ -6,7 +6,6 @@ import com.kaboomroads.tehshadur.item.ModItems;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -84,10 +83,6 @@ public class DesolisCannonBlock extends BaseEntityBlock {
             if (blockEntity.powered != newPowered) {
                 if (newPowered) {
                     blockEntity.powered = true;
-                    for (Player player : level.players()) {
-                        BlockPos tp = BlockPos.of(blockEntity.targetPosition.bits);
-                        player.displayClientMessage(Component.literal(tp.getX() + " " + tp.getY() + " " + tp.getZ() + " " + blockEntity.targetPosition), false);
-                    }
                     blockEntity.fire();
                 } else blockEntity.powered = false;
             }
