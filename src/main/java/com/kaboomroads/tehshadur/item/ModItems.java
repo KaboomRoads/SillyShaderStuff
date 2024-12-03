@@ -2,6 +2,7 @@ package com.kaboomroads.tehshadur.item;
 
 import com.kaboomroads.tehshadur.TehShadur;
 import com.kaboomroads.tehshadur.block.ModBlocks;
+import com.kaboomroads.tehshadur.item.custom.DesolisRecieverItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -18,6 +19,17 @@ import java.util.function.UnaryOperator;
 public class ModItems {
     public static final Item DIVINE_DOMINANCE = registerBlock(ModBlocks.DIVINE_DOMINANCE);
     public static final Item OMEN_MONOLITH = registerBlock(ModBlocks.OMEN_MONOLITH);
+    public static final Item DESOLIS_CANNON = registerBlock(ModBlocks.DESOLIS_CANNON);
+    public static final Item DESOLIS_ANTENNA = registerBlock(ModBlocks.DESOLIS_ANTENNA);
+    public static final Item DESOLIS_RECIEVER = registerItem(
+            "desolis_reciever",
+            DesolisRecieverItem::new,
+            new Item.Properties().stacksTo(1)
+    );
+    public static final Item OBLITERATION_ROUND = registerItem(
+            "obliteration_round",
+            new Item.Properties().stacksTo(1)
+    );
 
     private static Function<Item.Properties, Item> createBlockItemWithCustomItemName(Block block) {
         return properties -> new BlockItem(block, properties.useItemDescriptionPrefix());

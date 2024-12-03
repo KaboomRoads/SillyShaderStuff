@@ -71,17 +71,17 @@ public class OmenMonolithBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return checkPlacement(context, this, PART);
+        return checkPlacement(context, PART, defaultBlockState());
     }
 
     @Nullable
-    public static BlockState checkPlacement(BlockPlaceContext context, Block block, IntegerProperty property) {
+    public static BlockState checkPlacement(BlockPlaceContext context, IntegerProperty property, BlockState defaultState) {
         BlockPos blockPos = context.getClickedPos();
         Level level = context.getLevel();
         if (blockPos.getY() <= level.getMaxY() - property.max) {
             for (int i = 1; i <= property.max; i++)
                 if (!level.getBlockState(blockPos.above(i)).canBeReplaced(context)) return null;
-            return block.defaultBlockState();
+            return defaultState;
         } else return null;
     }
 

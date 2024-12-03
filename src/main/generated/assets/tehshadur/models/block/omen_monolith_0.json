@@ -1,7 +1,0 @@
-{
-  "parent": "tehshadur:block/column_bottom",
-  "textures": {
-    "bottom": "tehshadur:block/omen_monolith_bottom",
-    "side": "tehshadur:block/omen_monolith_side_0"
-  }
-}

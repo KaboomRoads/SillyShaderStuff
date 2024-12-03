@@ -61,7 +61,7 @@ public class DivineDominanceBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return OmenMonolithBlock.checkPlacement(context, this, PART);
+        return OmenMonolithBlock.checkPlacement(context, PART, defaultBlockState());
     }
 
     @Override

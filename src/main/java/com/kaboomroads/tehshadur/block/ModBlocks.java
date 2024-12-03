@@ -1,6 +1,8 @@
 package com.kaboomroads.tehshadur.block;
 
 import com.kaboomroads.tehshadur.TehShadur;
+import com.kaboomroads.tehshadur.block.custom.DesolisAntennaBlock;
+import com.kaboomroads.tehshadur.block.custom.DesolisCannonBlock;
 import com.kaboomroads.tehshadur.block.custom.DivineDominanceBlock;
 import com.kaboomroads.tehshadur.block.custom.OmenMonolithBlock;
 import net.minecraft.core.Registry;
@@ -32,11 +34,28 @@ public class ModBlocks {
             OmenMonolithBlock::new,
             BlockBehaviour.Properties.of()
                     .lightLevel(state -> 15)
-                    .mapColor(MapColor.STONE)
+                    .mapColor(MapColor.COLOR_BLACK)
                     .instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops()
                     .strength(-1, Float.MAX_VALUE)
-                    .mapColor(MapColor.COLOR_BLACK)
+    );
+    public static final Block DESOLIS_CANNON = register(
+            "desolis_cannon",
+            DesolisCannonBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .strength(6.0F, 6.0F)
+    );
+    public static final Block DESOLIS_ANTENNA = register(
+            "desolis_antenna",
+            DesolisAntennaBlock::new,
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .requiresCorrectToolForDrops()
+                    .strength(3.0F, 6.0F)
     );
 
     public static Block register(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, Block> function, BlockBehaviour.Properties properties) {

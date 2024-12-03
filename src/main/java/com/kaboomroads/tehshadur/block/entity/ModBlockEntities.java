@@ -2,6 +2,7 @@ package com.kaboomroads.tehshadur.block.entity;
 
 import com.kaboomroads.tehshadur.TehShadur;
 import com.kaboomroads.tehshadur.block.ModBlocks;
+import com.kaboomroads.tehshadur.block.entity.custom.DesolisCannonBlockEntity;
 import com.kaboomroads.tehshadur.block.entity.custom.DivineDominanceBlockEntity;
 import com.kaboomroads.tehshadur.block.entity.custom.OmenMonolithBlockEntity;
 import com.mojang.logging.LogUtils;
@@ -22,6 +23,7 @@ public class ModBlockEntities {
 
     public static final BlockEntityType<DivineDominanceBlockEntity> DIVINE_DOMINANCE = register("divine_dominance", DivineDominanceBlockEntity::new, ModBlocks.DIVINE_DOMINANCE);
     public static final BlockEntityType<OmenMonolithBlockEntity> OMEN_MONOLITH = register("omen_monolith", OmenMonolithBlockEntity::new, ModBlocks.OMEN_MONOLITH);
+    public static final BlockEntityType<DesolisCannonBlockEntity> DESOLIS_CANNON = register("desolis_cannon", DesolisCannonBlockEntity::new, ModBlocks.DESOLIS_CANNON);
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name, BlockEntityType.BlockEntitySupplier<? extends T> blockEntitySupplier, Block... blocks

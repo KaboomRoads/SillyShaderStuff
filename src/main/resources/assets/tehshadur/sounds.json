@@ -1,0 +1,20 @@
+{
+  "block.desolis_cannon.load": {
+    "subtitle": "subtitle.tehshadur.block.desolis_cannon.load",
+    "sounds": [
+      "tehshadur:block/desolis_cannon/load"
+    ]
+  },
+  "block.desolis_cannon.fire": {
+    "subtitle": "subtitle.tehshadur.block.desolis_cannon.fire",
+    "sounds": [
+      "tehshadur:block/desolis_cannon/fire"
+    ]
+  },
+  "entity.erasure.explode": {
+    "subtitle": "subtitle.tehshadur.entity.erasure.explode",
+    "sounds": [
+      "tehshadur:entity/erasure/explode"
+    ]
+  }
+}

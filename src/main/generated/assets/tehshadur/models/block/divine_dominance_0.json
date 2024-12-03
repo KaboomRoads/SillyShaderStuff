@@ -1,7 +1,0 @@
-{
-  "parent": "tehshadur:block/column_bottom",
-  "textures": {
-    "bottom": "tehshadur:block/divine_dominance_bottom",
-    "side": "tehshadur:block/divine_dominance_side_0"
-  }
-}
