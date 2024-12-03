@@ -77,18 +77,6 @@ public class Erasure extends Entity {
     public void kablooey() {
         if (level() instanceof ServerLevel level) {
             Vec3 pos = position();
-            ErasureExplosion erasureExplosion = new ErasureExplosion(level, this, null, new EntityBasedExplosionDamageCalculator(this) {
-                @Override
-                public float getKnockbackMultiplier(Entity entity) {
-                    return 30.0F;
-                }
-
-                @Override
-                public float getEntityDamageAmount(Explosion explosion, Entity entity, float f) {
-                    return super.getEntityDamageAmount(explosion, entity, f) * 7.5F;
-                }
-            }, pos, 50, true, Explosion.BlockInteraction.DESTROY);
-            erasureExplosion.explode();
             level.playSound(null, blockPosition(), ModSounds.ERASURE_EXPLODE, SoundSource.AMBIENT, 16.0F, 1.0F);
             for (ServerPlayer player : level.getPlayers(player -> player.distanceToSqr(pos) <= 256 * 256)) {
                 ServerPlayNetworking.send(player, new FlashPayload(ARGB.colorFromFloat(0.5F, 0.0F, 1.0F, 1.0F), 1, 80, 20));
@@ -96,6 +84,18 @@ public class Erasure extends Entity {
                 ServerPlayNetworking.send(player, new ScreenShakePayload(2.0F, 0.1F, 5, 25, 60));
                 level.sendParticles(player, ModParticles.ERASURE_RESIDUE, false, true, pos.x, pos.y, pos.z, 500, 0, 0, 0, 0.5);
             }
+            ErasureExplosion erasureExplosion = new ErasureExplosion(level, this, null, new EntityBasedExplosionDamageCalculator(this) {
+                @Override
+                public float getKnockbackMultiplier(Entity entity) {
+                    return 50.0F;
+                }
+
+                @Override
+                public float getEntityDamageAmount(Explosion explosion, Entity entity, float f) {
+                    return super.getEntityDamageAmount(explosion, entity, f) * 25.0F;
+                }
+            }, pos, 50, true, Explosion.BlockInteraction.DESTROY);
+            erasureExplosion.explode();
         }
     }
 

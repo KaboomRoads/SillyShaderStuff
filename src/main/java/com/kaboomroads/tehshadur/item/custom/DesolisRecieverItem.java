@@ -55,7 +55,7 @@ public class DesolisRecieverItem extends Item {
                 List<BlockPos> positions = ImmutableList.<BlockPos>builderWithExpectedSize(old.size() + 1).addAll(old).add(pos).build();
                 itemStack.set(ModComponents.BLOCK_POSITIONS, positions);
                 context.getPlayer().displayClientMessage(Component.translatable("item.tehshadur.desolis_reciever.connect"), true);
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
         return super.useOn(context);
@@ -104,12 +104,12 @@ public class DesolisRecieverItem extends Item {
                     int centerZ = Mth.floor((first.z + second.z + third.z) / 3.0);
                     long bits = new BlockPos(centerX, centerY, centerZ).asLong();
                     player.displayClientMessage(Component.literal(new BitQueue(bits).toCompactString()), true);
-                    return InteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS_SERVER;
                 }
             } else if (!current.isEmpty()) {
                 itemStack.set(ModComponents.BLOCK_POSITIONS, List.of());
                 player.displayClientMessage(Component.translatable("item.tehshadur.desolis_reciever.clear"), true);
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
         return super.use(level, player, interactionHand);

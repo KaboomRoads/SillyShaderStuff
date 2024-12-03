@@ -105,8 +105,9 @@ public class DesolisCannonBlock extends BaseEntityBlock {
                     return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
             }
             if (level.getBlockEntity(cursor) instanceof DesolisCannonBlockEntity blockEntity && !blockEntity.isLoaded()) {
-                itemStack.shrink(1);
+                if (!player.getAbilities().instabuild) itemStack.shrink(1);
                 blockEntity.load();
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
         return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
