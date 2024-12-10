@@ -15,6 +15,7 @@ import com.kaboomroads.tehshadur.client.renderer.blockentity.desoliscannon.Desol
 import com.kaboomroads.tehshadur.client.renderer.blockentity.desoliscannon.DesolisCannonModel;
 import com.kaboomroads.tehshadur.client.renderer.entity.erasure.ErasureRenderer;
 import com.kaboomroads.tehshadur.entity.ModEntities;
+import com.kaboomroads.tehshadur.mixinducks.EntityDuck;
 import com.kaboomroads.tehshadur.networking.ModPackets;
 import com.kaboomroads.tehshadur.particle.ModParticles;
 import net.fabricmc.api.ClientModInitializer;
@@ -25,6 +26,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.world.entity.Entity;
 
 public class TehShadurClient implements ClientModInitializer {
     @Override
@@ -57,6 +59,10 @@ public class TehShadurClient implements ClientModInitializer {
             CameraDuck camera = (CameraDuck) context.client().gameRenderer.getMainCamera();
             camera.tehshadur$setScreenShake(payload.screenShakeStrength(), payload.screenShakeInterval());
             camera.tehshadur$setScreenShakeTimes(payload.screenShakeEaseInTime(), payload.screenShakeStayTime(), payload.screenShakeEaseOutTime());
+        });
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.ENTITY_ANIMATION, (payload, context) -> {
+            Entity entity = context.client().level.getEntity(payload.entityId());
+            if (entity != null) ((EntityDuck) entity).tehshadur$receiveAnimation(payload.animationId());
         });
     }
 }

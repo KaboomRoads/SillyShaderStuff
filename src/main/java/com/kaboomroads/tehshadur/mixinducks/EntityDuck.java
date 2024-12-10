@@ -8,4 +8,6 @@ public interface EntityDuck {
     BorderProvider tehshadur$getBorderProvider();
 
     void tehshadur$collideWithActiveBorder();
+
+    void tehshadur$receiveAnimation(int animationId);
 }
